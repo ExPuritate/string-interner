@@ -14,7 +14,7 @@ use crate::Symbol;
 
 /// The default backend recommended for general use.
 #[cfg(feature = "backends")]
-pub type DefaultBackend = StringBackend<crate::DefaultSymbol>;
+pub type DefaultBackend = BucketBackend<crate::DefaultSymbol>;
 
 /// Types implementing this trait may act as backends for the string interner.
 ///

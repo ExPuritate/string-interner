@@ -180,9 +180,9 @@ checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
 
 [[package]]
 name = "foldhash"
-version = "0.1.4"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0d2fde1f7b3d48b8395d5f2de76c18a528bd6a9cdde438df747bfcba3e05d6f"
+checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
 name = "fxhash"
@@ -205,9 +205,9 @@ dependencies = [
 
 [[package]]
 name = "hashbrown"
-version = "0.15.2"
+version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
+checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
 dependencies = [
  "foldhash",
 ]
@@ -446,6 +446,7 @@ name = "string-interner"
 version = "0.19.0"
 dependencies = [
  "criterion",
+ "foldhash",
  "fxhash",
  "hashbrown",
  "serde",
@@ -638,3 +639,23 @@ name = "windows_x86_64_msvc"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
+
+[[patch.unused]]
+name = "peg"
+version = "0.8.5"
+
+[[patch.unused]]
+name = "bitfields"
+version = "1.0.2"
+
+[[patch.unused]]
+name = "line-ending"
+version = "1.5.1"
+
+[[patch.unused]]
+name = "encoding_rs"
+version = "0.8.35"
+
+[[patch.unused]]
+name = "getset"
+version = "0.1.6"

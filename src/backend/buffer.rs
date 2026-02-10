@@ -1,7 +1,7 @@
 #![cfg(feature = "backends")]
 
 use super::Backend;
-use crate::{symbol::expect_valid_symbol, DefaultSymbol, Symbol};
+use crate::{DefaultSymbol, Symbol, symbol::expect_valid_symbol};
 use alloc::vec::Vec;
 use core::{marker::PhantomData, mem, str};
 
@@ -61,7 +61,7 @@ impl<S> Clone for BufferBackend<S> {
     }
 }
 
-impl<S> Default for BufferBackend<S> {
+impl<S> const Default for BufferBackend<S> {
     #[cfg_attr(feature = "inline-more", inline)]
     fn default() -> Self {
         Self {

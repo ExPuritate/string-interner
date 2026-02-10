@@ -1,7 +1,7 @@
 #![cfg(feature = "backends")]
 
 use super::Backend;
-use crate::{symbol::expect_valid_symbol, DefaultSymbol, Symbol};
+use crate::{DefaultSymbol, Symbol, symbol::expect_valid_symbol};
 use alloc::{string::String, vec::Vec};
 use core::{iter::Enumerate, marker::PhantomData, slice};
 
@@ -80,7 +80,7 @@ impl<S> Clone for StringBackend<S> {
     }
 }
 
-impl<S> Default for StringBackend<S> {
+impl<S> const Default for StringBackend<S> {
     #[cfg_attr(feature = "inline-more", inline)]
     fn default() -> Self {
         Self {

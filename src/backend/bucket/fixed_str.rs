@@ -1,12 +1,20 @@
 use super::InternedStr;
 use alloc::string::String;
 
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive_const(Default)]
 pub struct FixedString {
     contents: String,
 }
 
 impl FixedString {
+    #[inline]
+    pub const fn new() -> Self {
+        Self {
+            contents: String::new(),
+        }
+    }
+
     /// Creates a new fixed string with the given fixed capacity.
     #[inline]
     pub fn with_capacity(cap: usize) -> Self {

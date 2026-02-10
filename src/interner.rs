@@ -1,11 +1,13 @@
-use crate::{backend::Backend, Symbol};
+use crate::{Symbol, backend::Backend};
 use core::{
     fmt,
     fmt::{Debug, Formatter},
     hash::{BuildHasher, Hash, Hasher},
     iter::FromIterator,
 };
+use foldhash::fast::FixedState;
 use hashbrown::{DefaultHashBuilder, HashMap};
+use std::sync::OnceLock;
 
 /// Creates the `u64` hash value for the given value using the given hash builder.
 fn make_hash<T>(builder: &impl BuildHasher, value: &T) -> u64
@@ -15,6 +17,37 @@ where
     let state = &mut builder.build_hasher();
     value.hash(state);
     state.finish()
+}
+
+pub struct StaticDefaultHasher {
+    inner: OnceLock<DefaultHashBuilder>,
+}
+
+impl const Default for StaticDefaultHasher {
+    fn default() -> Self {
+        Self {
+            inner: OnceLock::new(),
+        }
+    }
+}
+
+impl BuildHasher for StaticDefaultHasher {
+    type Hasher = <DefaultHashBuilder as BuildHasher>::Hasher;
+
+    fn build_hasher(&self) -> Self::Hasher {
+        self.inner
+            .get_or_init(DefaultHashBuilder::default)
+            .build_hasher()
+    }
+    fn hash_one<T: Hash>(&self, x: T) -> u64
+    where
+        Self: Sized,
+        Self::Hasher: Hasher,
+    {
+        self.inner
+            .get_or_init(DefaultHashBuilder::default)
+            .hash_one(x)
+    }
 }
 
 /// Data structure to intern and resolve strings.
@@ -28,7 +61,7 @@ where
 ///     - This maps from `string` type to `symbol` type.
 /// - [`StringInterner::resolve`]: To resolve your already interned strings.
 ///     - This maps from `symbol` type to `string` type.
-pub struct StringInterner<B, H = DefaultHashBuilder>
+pub struct StringInterner<B, H = StaticDefaultHasher>
 where
     B: Backend,
 {
@@ -101,10 +134,14 @@ where
 {
     /// Creates a new empty `StringInterner`.
     #[cfg_attr(feature = "inline-more", inline)]
-    pub fn new() -> Self {
+    pub const fn new() -> Self
+    where
+        H: [const] Default,
+        B: [const] Default,
+    {
         Self {
-            dedup: HashMap::default(),
-            hasher: Default::default(),
+            dedup: HashMap::with_hasher(()),
+            hasher: H::default(),
             backend: B::default(),
         }
     }
@@ -114,7 +151,7 @@ where
     pub fn with_capacity(cap: usize) -> Self {
         Self {
             dedup: HashMap::with_capacity_and_hasher(cap, ()),
-            hasher: Default::default(),
+            hasher: H::default(),
             backend: B::with_capacity(cap),
         }
     }
@@ -128,9 +165,12 @@ where
 {
     /// Creates a new empty `StringInterner` with the given hasher.
     #[cfg_attr(feature = "inline-more", inline)]
-    pub fn with_hasher(hash_builder: H) -> Self {
+    pub const fn with_hasher(hash_builder: H) -> Self
+    where
+        B: [const] Default,
+    {
         StringInterner {
-            dedup: HashMap::default(),
+            dedup: HashMap::with_hasher(()),
             hasher: hash_builder,
             backend: B::default(),
         }

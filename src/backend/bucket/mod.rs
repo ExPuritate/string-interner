@@ -5,7 +5,7 @@ mod interned_str;
 
 use self::{fixed_str::FixedString, interned_str::InternedStr};
 use super::Backend;
-use crate::{symbol::expect_valid_symbol, DefaultSymbol, Symbol};
+use crate::{DefaultSymbol, Symbol, symbol::expect_valid_symbol};
 use alloc::{string::String, vec::Vec};
 use core::{iter::Enumerate, marker::PhantomData, slice};
 
@@ -64,7 +64,7 @@ unsafe impl<S> Send for BucketBackend<S> where S: Symbol {}
 /// the bucket backend has no interior mutability.
 unsafe impl<S> Sync for BucketBackend<S> where S: Symbol {}
 
-impl<S> Default for BucketBackend<S> {
+impl<S> const Default for BucketBackend<S> {
     #[cfg_attr(feature = "inline-more", inline)]
     fn default() -> Self {
         Self {

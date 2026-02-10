@@ -1,4 +1,7 @@
 #![no_std]
+#![feature(const_trait_impl)]
+#![feature(const_default)]
+#![feature(derive_const)]
 #![doc(html_root_url = "https://docs.rs/crate/string-interner/0.18.0")]
 #![warn(unsafe_op_in_unsafe_fn, clippy::redundant_closure_for_method_calls)]
 
@@ -169,7 +172,7 @@ pub mod symbol;
 
 /// A convenience [`StringInterner`] type based on the [`DefaultBackend`].
 #[cfg(feature = "backends")]
-pub type DefaultStringInterner<B = DefaultBackend, H = DefaultHashBuilder> =
+pub type DefaultStringInterner<B = DefaultBackend, H = StaticDefaultHasher> =
     self::interner::StringInterner<B, H>;
 
 #[cfg(feature = "backends")]
@@ -183,3 +186,5 @@ pub use self::{
 
 #[doc(inline)]
 pub use hashbrown::DefaultHashBuilder;
+#[cfg(feature = "backends")]
+use interner::StaticDefaultHasher;
