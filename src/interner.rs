@@ -5,7 +5,6 @@ use core::{
     hash::{BuildHasher, Hash, Hasher},
     iter::FromIterator,
 };
-use foldhash::fast::FixedState;
 use hashbrown::{DefaultHashBuilder, HashMap};
 use std::sync::OnceLock;
 

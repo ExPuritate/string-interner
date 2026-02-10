@@ -69,7 +69,7 @@ impl<S> const Default for BucketBackend<S> {
     fn default() -> Self {
         Self {
             spans: Vec::new(),
-            head: FixedString::default(),
+            head: FixedString::new(),
             full: Vec::new(),
             marker: Default::default(),
         }
